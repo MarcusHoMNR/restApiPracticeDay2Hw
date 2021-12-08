@@ -95,7 +95,6 @@ public class CompanyServiceTest {
         given(mockCompanyRepository.findByPage(page, pageSize))
                 .willReturn(companies);
 
-
         //when
         List<Company> actual = companyService.findByPage(page, pageSize);
         //then
