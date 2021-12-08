@@ -24,10 +24,10 @@ public class CompanyController {
         return companyService.findAll();
     }
 
-//    @GetMapping("/{id}")
-//    public Company getCompanyById(@PathVariable Integer id) {
-//        return companyRepository.findById(id);
-//    }
+    @GetMapping("/{id}")
+    public Company getCompanyById(@PathVariable Integer id) {
+        return companyService.findById(id);
+    }
 //
 //    @GetMapping("/{id}/employees")
 //    public List<Employee> getAllEmployeesByCompanyId(@PathVariable Integer id) {
