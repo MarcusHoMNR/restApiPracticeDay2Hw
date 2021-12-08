@@ -15,6 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 public class CompanyServiceTest {
@@ -115,7 +116,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    void should_return_updated_company_when_edit_given_company() {
+    void should_return_updated_company_when_edit_given_company_and_id() {
         //given
         Company updatedCompany = new Company(1, "OOCL");
         given(mockCompanyRepository.save(1, updatedCompany))
@@ -127,5 +128,13 @@ public class CompanyServiceTest {
         Company actual = companyService.edit(1, updatedCompany);
         //then
         assertEquals(updatedCompany, actual);
+    }
+
+    @Test
+    void should_return_nothing_when_delete_given_company_and_id() {
+        //when
+        companyService.delete(1);
+        //then
+        verify(mockCompanyRepository).delete(1);
     }
 }

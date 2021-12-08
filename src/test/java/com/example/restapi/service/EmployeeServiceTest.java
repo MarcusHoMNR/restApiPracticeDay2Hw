@@ -122,9 +122,9 @@ public class EmployeeServiceTest {
         Employee employee = new Employee(1, "Marcus", 25, "Male", 9999999, 1);
 
         //when
-        employeeService.delete(employee.getId());
+        employeeService.delete(1);
 
         //then
-        verify(mockEmployeeRepository).delete(employee.getId());
+        verify(mockEmployeeRepository).delete(1);
     }
 }

@@ -43,4 +43,7 @@ public class CompanyService {
         }
         return companyRepository.save(id, company);
     }
+
+    public void delete(int i) {
+    }
 }
