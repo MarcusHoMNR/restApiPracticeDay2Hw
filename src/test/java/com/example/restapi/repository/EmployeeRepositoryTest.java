@@ -49,7 +49,7 @@ public class EmployeeRepositoryTest {
     }
 
     @Test
-    void should_return_employee_when_findById_given_employe_and_id() {
+    void should_return_employee_when_findById_given_employee_and_id() {
         //given
         List<Employee> employees = getEmployees();
 
@@ -59,6 +59,25 @@ public class EmployeeRepositoryTest {
         //then
         assertNotNull(actual);
         assertEquals(employees.get(0).getId(), actual.getId());
+    }
+
+    @Test
+    void should_return_employees_when_findByGender_given_employees_and_gender() {
+        //given
+        List<Employee> employees = getEmployees();
+
+        //when
+        List<Employee> actual = employeeRepository.findByGender("Male");
+
+        //then
+        assertEquals(employees.size(), actual.size());
+        assertEquals(employees.get(0).getId(), actual.get(0).getId());
+        assertEquals(employees.get(1).getId(), actual.get(1).getId());
+        assertEquals(employees.get(2).getId(), actual.get(2).getId());
+        assertEquals(employees.get(3).getId(), actual.get(3).getId());
+        assertEquals(employees.get(4).getId(), actual.get(4).getId());
+        assertEquals(employees.get(5).getId(), actual.get(5).getId());
+        assertEquals(employees.get(6).getId(), actual.get(6).getId());
     }
 
 }
