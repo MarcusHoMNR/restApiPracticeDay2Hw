@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
 public class EmployeeRepositoryTest {
@@ -45,6 +46,19 @@ public class EmployeeRepositoryTest {
         assertEquals(employees.get(4).getId(), actual.get(4).getId());
         assertEquals(employees.get(5).getId(), actual.get(5).getId());
         assertEquals(employees.get(6).getId(), actual.get(6).getId());
+    }
+
+    @Test
+    void should_return_employee_when_findById_given_employe_and_id() {
+        //given
+        List<Employee> employees = getEmployees();
+
+        //when
+        Employee actual = employeeRepository.findById(1);
+
+        //then
+        assertNotNull(actual);
+        assertEquals(employees.get(0).getId(), actual.getId());
     }
 
 }
