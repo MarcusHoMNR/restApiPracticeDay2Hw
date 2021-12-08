@@ -19,6 +19,6 @@ public class CompanyService {
     }
 
     public Company findById(int id) {
-        return null;
+        return companyRepository.findById(id);
     }
 }
