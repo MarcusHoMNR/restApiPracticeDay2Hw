@@ -68,11 +68,26 @@ public class CompanyServiceTest {
         given(mockEmployeeRepository.findByCompanyId(1))
                 .willReturn(getEmployees());
 
-
-
         //when
         Company actual = companyService.findById(1);
         //then
         assertEquals(companies.get(0), actual);
+    }
+
+    @Test
+    void should_return_employees_when_findEmployeeById_given_employees_and_companies_and_id() {
+        //given
+        List<Company> companies = new ArrayList<>();
+        companies.add(new Company(1, "Spring"));
+        companies.add(new Company(2, "Spring2"));
+        given(mockCompanyRepository.findById(1))
+                .willReturn(companies.get(0));
+        given(mockEmployeeRepository.findByCompanyId(1))
+                .willReturn(getEmployees());
+
+        //when
+        List<Employee> actual = companyService.findEmployeeById(1);
+        //then
+        assertEquals(getEmployees(), actual);
     }
 }

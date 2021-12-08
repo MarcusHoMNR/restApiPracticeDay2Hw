@@ -1,6 +1,7 @@
 package com.example.restapi.service;
 
 import com.example.restapi.entity.Company;
+import com.example.restapi.entity.Employee;
 import com.example.restapi.repository.CompanyRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +21,9 @@ public class CompanyService {
 
     public Company findById(int id) {
         return companyRepository.findById(id);
+    }
+
+    public List<Employee> findEmployeeById(int id) {
+        return null;
     }
 }
