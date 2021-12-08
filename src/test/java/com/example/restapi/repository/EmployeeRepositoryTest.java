@@ -125,5 +125,14 @@ public class EmployeeRepositoryTest {
         assertEquals(1, actual.getCompanyId());
     }
 
+    @Test
+    void should_return_nothing_when_delete_given_employee() {
+        //given
+        //when
+        employeeRepository.delete(3);
+
+        //then
+        assertEquals(6, employeeRepository.findAll().size());
+    }
 
 }
