@@ -36,6 +36,11 @@ public class CompanyService {
     }
 
     public Company edit(int id, Company updatedCompany) {
-        return null;
+        Company company = companyRepository.findById(id);
+
+        if (updatedCompany.getName() != null) {
+            company.setName(updatedCompany.getName());
+        }
+        return companyRepository.save(id, company);
     }
 }

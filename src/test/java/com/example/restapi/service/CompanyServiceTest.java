@@ -120,6 +120,8 @@ public class CompanyServiceTest {
         Company updatedCompany = new Company(1, "OOCL");
         given(mockCompanyRepository.save(1, updatedCompany))
                 .willReturn(updatedCompany);
+        given(mockCompanyRepository.findById(1))
+                .willReturn(updatedCompany);
 
         //when
         Company actual = companyService.edit(1, updatedCompany);
