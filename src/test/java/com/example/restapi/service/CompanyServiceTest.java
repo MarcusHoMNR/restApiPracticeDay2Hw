@@ -102,9 +102,9 @@ public class CompanyServiceTest {
     }
 
     @Test
-    void should_return_created_company_when_create_given_and_company() {
+    void should_return_created_company_when_create_given_company() {
         //given
-        Company newCompany = new Company(1, "OOCL");
+        Company newCompany = new Company(null, "OOCL");
         given(mockCompanyRepository.create(newCompany))
                 .willReturn(newCompany);
 
@@ -112,5 +112,18 @@ public class CompanyServiceTest {
         Company actual = companyService.create(newCompany);
         //then
         assertEquals(newCompany, actual);
+    }
+
+    @Test
+    void should_return_updated_company_when_edit_given_company() {
+        //given
+        Company updatedCompany = new Company(1, "OOCL");
+        given(mockCompanyRepository.save(1, updatedCompany))
+                .willReturn(updatedCompany);
+
+        //when
+        Company actual = companyService.edit(1, updatedCompany);
+        //then
+        assertEquals(updatedCompany, actual);
     }
 }

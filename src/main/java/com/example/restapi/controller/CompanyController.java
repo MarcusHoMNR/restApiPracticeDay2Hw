@@ -33,28 +33,23 @@ public class CompanyController {
     public List<Employee> getAllEmployeesByCompanyId(@PathVariable Integer id) {
         return companyService.findEmployeeById(id);
     }
-//
-//    @GetMapping(params = {"page", "pageSize"})
-//    public List<Company> getAllCompaniesByPage(@RequestParam Integer page, Integer pageSize) {
-//        return companyRepository.findByPage(page, pageSize);
-//    }
-//
-//    @ResponseStatus(code = HttpStatus.CREATED)
-//    @PostMapping
-//    public Company createCompany(@RequestBody Company newCompany) {
-//        return companyRepository.create(newCompany);
-//    }
-//
-//    @PutMapping("/{id}")
-//    public Company editCompany(@PathVariable Integer id, @RequestBody Company updatedCompany) {
-//        Company company = companyRepository.findById(id);
-//
-//        if (company.getName() != null) {
-//            company.setName(updatedCompany.getName());
-//        }
-//        return companyRepository.save(id, company);
-//    }
-//
+
+    @GetMapping(params = {"page", "pageSize"})
+    public List<Company> getAllCompaniesByPage(@RequestParam Integer page, Integer pageSize) {
+        return companyService.findByPage(page, pageSize);
+    }
+
+    @ResponseStatus(code = HttpStatus.CREATED)
+    @PostMapping
+    public Company createCompany(@RequestBody Company newCompany) {
+        return companyService.create(newCompany);
+    }
+
+    @PutMapping("/{id}")
+    public Company editCompany(@PathVariable Integer id, @RequestBody Company updatedCompany) {
+        return companyService.edit(id, updatedCompany);
+    }
+
 //    @ResponseStatus(code = HttpStatus.NO_CONTENT)
 //    @DeleteMapping("/{id}")
 //    public void deleteCompany(@PathVariable Integer id) {
