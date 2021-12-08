@@ -44,6 +44,7 @@ public class CompanyService {
         return companyRepository.save(id, company);
     }
 
-    public void delete(int i) {
+    public void delete(int id) {
+        companyRepository.delete(id);
     }
 }
