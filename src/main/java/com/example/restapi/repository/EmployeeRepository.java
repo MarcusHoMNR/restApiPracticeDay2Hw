@@ -14,13 +14,13 @@ public class EmployeeRepository {
 
 
     public EmployeeRepository() {
-        this.employees.add(new Employee(1, "Marcus", 22, "Male", 298912220));
-        this.employees.add(new Employee(2, "Marcus2", 22, "Male", 298912220));
-        this.employees.add(new Employee(3, "Marcus3", 22, "Male", 298912220));
-        this.employees.add(new Employee(4, "Marcus4", 22, "Male", 298912220));
-        this.employees.add(new Employee(5, "Marcus5", 22, "Male", 298912220));
-        this.employees.add(new Employee(6, "Marcus6", 22, "Male", 298912220));
-        this.employees.add(new Employee(7, "Marcus7", 22, "Male", 298912220));
+        this.employees.add(new Employee(1, "Marcus", 22, "Male", 298912220, 1));
+        this.employees.add(new Employee(2, "Marcus2", 22, "Male", 298912220, 1));
+        this.employees.add(new Employee(3, "Marcus3", 22, "Male", 298912220, 1));
+        this.employees.add(new Employee(4, "Marcus4", 22, "Male", 298912220, 1));
+        this.employees.add(new Employee(5, "Marcus5", 22, "Male", 298912220, 1));
+        this.employees.add(new Employee(6, "Marcus6", 22, "Male", 298912220, 1));
+        this.employees.add(new Employee(7, "Marcus7", 22, "Male", 298912220, 1));
     }
 
     public List<Employee> findAll() {
@@ -61,5 +61,9 @@ public class EmployeeRepository {
 
     public void clearAll() {
         employees.clear();
+    }
+
+    public List<Employee> findByCompanyId(Integer companyId) {
+        return employees.stream().filter(employee -> employee.getCompanyId().equals(companyId)).collect(Collectors.toList());
     }
 }
