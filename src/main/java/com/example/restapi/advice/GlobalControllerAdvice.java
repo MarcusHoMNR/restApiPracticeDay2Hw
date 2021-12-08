@@ -1,5 +1,6 @@
 package com.example.restapi.advice;
 
+import com.example.restapi.exception.NoCompanyFoundException;
 import com.example.restapi.exception.NoEmployeeFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class GlobalControllerAdvice {
 
-    @ExceptionHandler({NoEmployeeFoundException.class})
+    @ExceptionHandler({NoEmployeeFoundException.class, NoCompanyFoundException.class})
     public ErrorResponse handleNotFound(Exception exception) {
         return new ErrorResponse(404, "Entity Not Found");
     }
