@@ -105,7 +105,6 @@ public class CompanyServiceTest {
     void should_return_created_company_when_create_given_and_company() {
         //given
         Company newCompany = new Company(1, "OOCL");
-
         given(mockCompanyRepository.create(newCompany))
                 .willReturn(newCompany);
 
