@@ -3,15 +3,19 @@ package com.example.restapi.service;
 import com.example.restapi.entity.Company;
 import com.example.restapi.entity.Employee;
 import com.example.restapi.exception.NoCompanyFoundException;
-import com.example.restapi.repository.CompanyRepository;
+import com.example.restapi.repository.CompanyRepositoryNew;
+import com.example.restapi.repository.EmployeeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,7 +26,10 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(SpringExtension.class)
 public class CompanyServiceTest {
     @Mock
-    CompanyRepository mockCompanyRepository;
+    CompanyRepositoryNew mockCompanyRepositoryNew;
+
+    @Mock
+    EmployeeRepository mockEmployeeRepository;
 
     @InjectMocks
     CompanyService companyService;
@@ -43,12 +50,13 @@ public class CompanyServiceTest {
     void should_return_all_companies_when_find_all_given_companies() {
         //given
         List<Company> companies = new ArrayList<>();
-        given(mockCompanyRepository.findAll())
-                .willReturn(companies);
+
 
         companies.add(new Company("1", "Spring"));
         companies.add(new Company("2", "Spring2"));
 
+        given(mockCompanyRepositoryNew.findAll())
+                .willReturn(companies);
         //when
         List<Company> actual = companyService.findAll();
         //then
@@ -60,9 +68,9 @@ public class CompanyServiceTest {
         //given
         List<Company> companies = new ArrayList<>();
         companies.add(new Company("1", "Spring"));
-        companies.add(new Company("2", "Spring2"));
-        given(mockCompanyRepository.findById("1"))
-                .willReturn(companies.get(0));
+
+        given(mockCompanyRepositoryNew.findById("1"))
+                .willReturn(Optional.of(companies.get(0)));
 
         //when
         Company actual = companyService.findById("1");
@@ -73,7 +81,7 @@ public class CompanyServiceTest {
     @Test
     void should_throw_when_find_all_given_company_not_exist() {
         //given
-        given(mockCompanyRepository.findById("9"))
+        given(mockCompanyRepositoryNew.findById("9"))
                 .willThrow(NoCompanyFoundException.class);
 
         //when
@@ -88,7 +96,8 @@ public class CompanyServiceTest {
         List<Employee> employees = getEmployees();
         companies.add(new Company("1", "Spring"));
         companies.add(new Company("2", "Spring2"));
-        given(mockCompanyRepository.findEmployeeById("1"))
+
+        given(mockEmployeeRepository.findAllByCompanyId("1"))
                 .willReturn(employees);
 
 
@@ -104,10 +113,10 @@ public class CompanyServiceTest {
         List<Company> companies = new ArrayList<>();
         companies.add(new Company("1", "Spring"));
         companies.add(new Company("2", "Spring2"));
-        int page = 1;
+        int page = 0;
         int pageSize = 2;
-        given(mockCompanyRepository.findByPage(page, pageSize))
-                .willReturn(companies);
+        given(mockCompanyRepositoryNew.findAll(PageRequest.of(page, pageSize)))
+                .willReturn(new PageImpl<>(companies));
 
         //when
         List<Company> actual = companyService.findByPage(page, pageSize);
@@ -119,7 +128,7 @@ public class CompanyServiceTest {
     void should_return_created_company_when_create_given_company() {
         //given
         Company newCompany = new Company(null, "OOCL");
-        given(mockCompanyRepository.create(newCompany))
+        given(mockCompanyRepositoryNew.insert(newCompany))
                 .willReturn(newCompany);
 
         //when
@@ -134,18 +143,18 @@ public class CompanyServiceTest {
         Company existingCompany = new Company("1", "MMM");
         Company updatedCompany = new Company("1", "OOCL");
 
-        given(mockCompanyRepository.findById("1"))
-                .willReturn(existingCompany);
+        given(mockCompanyRepositoryNew.findById("1"))
+                .willReturn(Optional.of(existingCompany));
         existingCompany.setName(updatedCompany.getName());
 
-        given(mockCompanyRepository.save(eq("1"), any(Company.class)))
+        given(mockCompanyRepositoryNew.save(any(Company.class)))
                 .willReturn(updatedCompany);
 
         //when
         Company actual = companyService.edit("1", existingCompany);
         //then
         assertAll(
-                () -> verify(mockCompanyRepository).save("1", existingCompany),
+                () -> verify(mockCompanyRepositoryNew).save(existingCompany),
                 () -> assertEquals(updatedCompany, actual)
         );
     }
@@ -155,6 +164,6 @@ public class CompanyServiceTest {
         //when
         companyService.delete("1");
         //then
-        verify(mockCompanyRepository).delete("1");
+        verify(mockCompanyRepositoryNew).deleteById("1");
     }
 }

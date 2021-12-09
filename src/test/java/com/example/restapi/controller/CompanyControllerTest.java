@@ -1,7 +1,9 @@
 package com.example.restapi.controller;
 
 import com.example.restapi.entity.Company;
-import com.example.restapi.repository.CompanyRepository;
+import com.example.restapi.entity.Employee;
+import com.example.restapi.repository.CompanyRepositoryNew;
+import com.example.restapi.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +23,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class CompanyControllerTest {
     @Autowired
-    CompanyRepository companyRepository;
+    CompanyRepositoryNew companyRepositoryNew;
+    @Autowired
+    EmployeeRepository employeeRepository;
 
     @Autowired
     MockMvc mockMvc;
 
     @BeforeEach
     void cleanRepository() {
-        companyRepository.clearAll();
+        companyRepositoryNew.deleteAll();
+        employeeRepository.deleteAll();
     }
 
     @Test
     void should_get_all_companies_when_perform_get_given_companies() throws Exception {
         //given
-        Company company1 = new Company("1", "Spring");
-        Company company2 = new Company("2", "Spring2");
+        Company company1 = new Company("61b1c0ca8093f31e20c3c451", "Spring");
+        Company company2 = new Company("61b1c0ca8093f31e20c3c452", "Spring2");
 
-        companyRepository.create(company1);
-        companyRepository.create(company2);
+        companyRepositoryNew.insert(company1);
+        companyRepositoryNew.insert(company2);
 
         //when
         //then
@@ -52,11 +57,15 @@ public class CompanyControllerTest {
     @Test
     void should_get_company_when_perform_getById_given_company_and_id() throws Exception {
         //given
-        Company company1 = new Company("1", "Spring");
-        Company company2 = new Company("2", "Spring2");
+        Company company1 = new Company("61b1c0ca8093f31e20c3c451", "Spring");
 
-        companyRepository.create(company1);
-        companyRepository.create(company2);
+        companyRepositoryNew.insert(company1);
+
+        Employee employee = new Employee("61b1bb92297d450797ed4261", "Marcus", 19, "Male", 1920213, company1.getId());
+        Employee employee2 = new Employee("61b1bb92297d450797ed4262", "Gloria", 22, "Female", 1000000, company1.getId());
+
+        employeeRepository.insert(employee);
+        employeeRepository.insert(employee2);
 
         //when
         //then
@@ -71,28 +80,35 @@ public class CompanyControllerTest {
     @Test
     void should_get_all_employee_under_company_when_obtain_employee_list_given_employees_and_company() throws Exception {
         //given
-        Company company1 = new Company("1", "Spring");
+        Company company1 = new Company("61b1c0ca8093f31e20c3c451", "Spring");
 
-        companyRepository.findEmployeeById("1");
+        companyRepositoryNew.insert(company1);
+
+        Employee employee = new Employee("61b1bb92297d450797ed4261", "Marcus", 19, "Male", 1920213, company1.getId());
+        Employee employee2 = new Employee("61b1bb92297d450797ed4262", "Gloria", 22, "Female", 1000000, company1.getId());
+
+        employeeRepository.insert(employee);
+        employeeRepository.insert(employee2);
+
         //when
         //then
         mockMvc.perform(MockMvcRequestBuilders.get("/companies/{id}/employees", company1.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$", hasSize(7)))
+                .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name").value("Marcus"))
-                .andExpect(jsonPath("$[0].age").value("22"))
+                .andExpect(jsonPath("$[0].age").value("19"))
                 .andExpect(jsonPath("$[0].gender").value("Male"));
     }
 
     @Test
     void should_get_all_companies_when_getByPaging_given_page_and_pageSize_and_company() throws Exception {
-        Company company1 = new Company("1", "Spring");
-        Company company2 = new Company("2", "Spring2");
-        Company company3 = new Company("3", "Spring3");
+        Company company1 = new Company("61b1c0ca8093f31e20c3c451", "Spring");
+        Company company2 = new Company("61b1c0ca8093f31e20c3c452", "Spring2");
+        Company company3 = new Company("61b1c0ca8093f31e20c3c453", "Spring3");
 
-        companyRepository.create(company1);
-        companyRepository.create(company2);
-        companyRepository.create(company3);
+        companyRepositoryNew.insert(company1);
+        companyRepositoryNew.insert(company2);
+        companyRepositoryNew.insert(company3);
 
         String page = "0";
         String pageSize = "2";
@@ -110,7 +126,6 @@ public class CompanyControllerTest {
     void should_return_company_when_perform_post_given_company() throws Exception {
         //given
         String company = "{\n" +
-                "    \"id\": 1,\n" +
                 "    \"name\": \"OOCL\"\n" +
                 "}";
 
@@ -120,20 +135,19 @@ public class CompanyControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(company))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value("1"))
                 .andExpect(jsonPath("$.name").value("OOCL"));
     }
 
     @Test
     void should_return_changed_company_when_perform_put_given_company_id() throws Exception {
         //given
-        Company company1 = new Company("1", "Spring");
-        Company company2 = new Company("2", "Spring2");
-        Company company3 = new Company("3", "Spring3");
+        Company company1 = new Company("61b1c0ca8093f31e20c3c451", "Spring");
+        Company company2 = new Company("61b1c0ca8093f31e20c3c452", "Spring2");
+        Company company3 = new Company("61b1c0ca8093f31e20c3c453", "Spring3");
 
-        companyRepository.create(company1);
-        companyRepository.create(company2);
-        companyRepository.create(company3);
+        companyRepositoryNew.insert(company1);
+        companyRepositoryNew.insert(company2);
+        companyRepositoryNew.insert(company3);
 
         String company = "{\n" +
                 "    \"name\": \"OOCL\"\n" +
@@ -151,13 +165,13 @@ public class CompanyControllerTest {
     @Test
     void should_delete_company_when_perform_delete_given_company_and_id() throws Exception {
         //given
-        Company company1 = new Company("1", "Spring");
-        Company company2 = new Company("2", "Spring2");
-        Company company3 = new Company("3", "Spring3");
+        Company company1 = new Company("61b1c0ca8093f31e20c3c451", "Spring");
+        Company company2 = new Company("61b1c0ca8093f31e20c3c452", "Spring2");
+        Company company3 = new Company("61b1c0ca8093f31e20c3c4513", "Spring3");
 
-        companyRepository.create(company1);
-        companyRepository.create(company2);
-        companyRepository.create(company3);
+        companyRepositoryNew.insert(company1);
+        companyRepositoryNew.insert(company2);
+        companyRepositoryNew.insert(company3);
         //when
         //then
         mockMvc.perform(MockMvcRequestBuilders.delete("/companies/{id}", company1.getId()))

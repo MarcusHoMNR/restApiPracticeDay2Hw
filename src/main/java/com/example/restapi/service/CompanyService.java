@@ -3,7 +3,6 @@ package com.example.restapi.service;
 import com.example.restapi.entity.Company;
 import com.example.restapi.entity.Employee;
 import com.example.restapi.exception.NoCompanyFoundException;
-import com.example.restapi.repository.CompanyRepository;
 import com.example.restapi.repository.CompanyRepositoryNew;
 import com.example.restapi.repository.EmployeeRepository;
 import org.springframework.data.domain.PageRequest;
@@ -13,12 +12,10 @@ import java.util.List;
 
 @Service
 public class CompanyService {
-    private CompanyRepository companyRepository;
     private CompanyRepositoryNew companyRepositoryNew;
     private EmployeeRepository employeeRepository;
 
-    public CompanyService(CompanyRepository companyRepository, CompanyRepositoryNew companyRepositoryNew, EmployeeRepository employeeRepository) {
-        this.companyRepository = companyRepository;
+    public CompanyService(CompanyRepositoryNew companyRepositoryNew, EmployeeRepository employeeRepository) {
         this.companyRepositoryNew = companyRepositoryNew;
         this.employeeRepository = employeeRepository;
     }
