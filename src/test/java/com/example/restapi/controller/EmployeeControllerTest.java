@@ -45,11 +45,9 @@ public class EmployeeControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/employees"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].id").isString())
                 .andExpect(jsonPath("$[0].name").value("Marcus"))
                 .andExpect(jsonPath("$[0].age").value("19"))
-                .andExpect(jsonPath("$[0].gender").value("Male"))
-                .andExpect(jsonPath("$[0].salary").value("1920213"));
+                .andExpect(jsonPath("$[0].gender").value("Male"));
     }
 
     @Test
@@ -61,11 +59,9 @@ public class EmployeeControllerTest {
         //then
         mockMvc.perform(MockMvcRequestBuilders.get("/employees/{id}", employee.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$.id").isString())
                 .andExpect(jsonPath("$.name").value("Gloria"))
                 .andExpect(jsonPath("$.age").value("22"))
-                .andExpect(jsonPath("$.gender").value("female"))
-                .andExpect(jsonPath("$.salary").value("1000000"));
+                .andExpect(jsonPath("$.gender").value("female"));
     }
 
     @Test
@@ -81,11 +77,9 @@ public class EmployeeControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/employees").param("gender", employee.getGender()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id").isString())
                 .andExpect(jsonPath("$[0].name").value("Marcus"))
                 .andExpect(jsonPath("$[0].age").value("19"))
-                .andExpect(jsonPath("$[0].gender").value("Male"))
-                .andExpect(jsonPath("$[0].salary").value("1920213"));
+                .andExpect(jsonPath("$[0].gender").value("Male"));
     }
 
     @Test
@@ -106,16 +100,12 @@ public class EmployeeControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/employees?page="+pageNum+"&pageSize="+pageSize))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].id").isString())
                 .andExpect(jsonPath("$[0].name").value("Marcus"))
                 .andExpect(jsonPath("$[0].age").value("19"))
                 .andExpect(jsonPath("$[0].gender").value("Male"))
-                .andExpect(jsonPath("$[0].salary").value("1920213"))
-                .andExpect(jsonPath("$[1].id").isString())
                 .andExpect(jsonPath("$[1].name").value("Gloria"))
                 .andExpect(jsonPath("$[1].age").value("22"))
-                .andExpect(jsonPath("$[1].gender").value("Female"))
-                .andExpect(jsonPath("$[1].salary").value("1000000"));
+                .andExpect(jsonPath("$[1].gender").value("Female"));
     }
 
     @Test

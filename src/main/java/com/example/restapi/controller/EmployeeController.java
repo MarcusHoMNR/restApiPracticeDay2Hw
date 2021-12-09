@@ -1,6 +1,7 @@
 package com.example.restapi.controller;
 
 import com.example.restapi.dto.EmployeeRequest;
+import com.example.restapi.dto.EmployeeResponse;
 import com.example.restapi.entity.Employee;
 import com.example.restapi.mapper.EmployeeMapper;
 import com.example.restapi.service.EmployeeService;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("employees")
@@ -16,34 +18,31 @@ public class EmployeeController {
     private EmployeeService employeeService;
     private EmployeeMapper employeeMapper;
 
-    public EmployeeController(EmployeeMapper employeeMapper) {
+
+    public EmployeeController(EmployeeService employeeService, EmployeeMapper employeeMapper) {
+        this.employeeService = employeeService;
         this.employeeMapper = employeeMapper;
     }
 
-
-    public EmployeeController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
-    }
-
     @GetMapping
-    public List<Employee> getAllEmployees() {
-        return employeeService.findAll();
+    public List<EmployeeResponse> getAllEmployees() {
+        return employeeService.findAll().stream().map(employee -> employeeMapper.toResponse(employee)).collect(Collectors.toList());
     }
 
 
     @GetMapping("/{id}")
-    public Employee getEmployeeById(@PathVariable String id) {
-        return employeeService.findById(id);
+    public EmployeeResponse getEmployeeById(@PathVariable String id) {
+        return employeeMapper.toResponse(employeeService.findById(id));
     }
 
     @GetMapping(params = {"gender"})
-    public List<Employee> getAllEmployeesByGender(@RequestParam String gender) {
-        return employeeService.findByGender(gender);
+    public List<EmployeeResponse> getAllEmployeesByGender(@RequestParam String gender) {
+        return employeeService.findByGender(gender).stream().map(employee -> employeeMapper.toResponse(employee)).collect(Collectors.toList());
     }
 
     @GetMapping(params = {"page", "pageSize"})
-    public List<Employee> getAllEmployeesByPage(@RequestParam Integer page, Integer pageSize) {
-        return employeeService.findByPage(page, pageSize);
+    public List<EmployeeResponse> getAllEmployeesByPage(@RequestParam Integer page, Integer pageSize) {
+        return employeeService.findByPage(page, pageSize).stream().map(employee -> employeeMapper.toResponse(employee)).collect(Collectors.toList());
     }
 
     @ResponseStatus(code = HttpStatus.CREATED)

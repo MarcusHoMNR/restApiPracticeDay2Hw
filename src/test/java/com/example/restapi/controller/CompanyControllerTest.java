@@ -48,12 +48,8 @@ public class CompanyControllerTest {
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id").isString())
                 .andExpect(jsonPath("$[0].name").value("Spring"))
-                .andExpect(jsonPath("$[0].employees[0].id").isString())
                 .andExpect(jsonPath("$[0].employees[0].name").value("Marcus"))
-                .andExpect(jsonPath("$[0].employees[0].gender").value("Male"))
-                .andExpect(jsonPath("$[0].employees[0].salary").value("298912220"))
-                .andExpect(jsonPath("$[0].employees[0].companyId").value("1"))
-        ;
+                .andExpect(jsonPath("$[0].employees[0].gender").value("Male"));
     }
 
     @Test
@@ -71,11 +67,8 @@ public class CompanyControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.id").isString())
                 .andExpect(jsonPath("$.name").value("Spring"))
-                .andExpect(jsonPath("$.employees[0].id").isString())
                 .andExpect(jsonPath("$.employees[0].name").value("Marcus"))
-                .andExpect(jsonPath("$.employees[0].gender").value("Male"))
-                .andExpect(jsonPath("$.employees[0].salary").value("298912220"))
-                .andExpect(jsonPath("$.employees[0].companyId").value("1"));
+                .andExpect(jsonPath("$.employees[0].gender").value("Male"));
     }
 
     @Test
@@ -89,12 +82,9 @@ public class CompanyControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/companies/{id}/employees", company1.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$", hasSize(7)))
-                .andExpect(jsonPath("$[0].id").isString())
                 .andExpect(jsonPath("$[0].name").value("Marcus"))
                 .andExpect(jsonPath("$[0].age").value("22"))
-                .andExpect(jsonPath("$[0].gender").value("Male"))
-                .andExpect(jsonPath("$[0].salary").value("298912220"))
-                .andExpect(jsonPath("$[0].companyId").value("1"));
+                .andExpect(jsonPath("$[0].gender").value("Male"));
     }
 
     @Test
@@ -116,11 +106,8 @@ public class CompanyControllerTest {
                 .andExpect(jsonPath("$[0].id").isString())
                 .andExpect(jsonPath("$[0].name").value("Spring"))
                 .andExpect(jsonPath("$[0].employees", hasSize(7)))
-                .andExpect(jsonPath("$[0].employees[0].id").isString())
                 .andExpect(jsonPath("$[0].employees[0].name").value("Marcus"))
                 .andExpect(jsonPath("$[0].employees[0].gender").value("Male"))
-                .andExpect(jsonPath("$[0].employees[0].salary").value("298912220"))
-                .andExpect(jsonPath("$[0].employees[0].companyId").value("1"))
                 .andExpect(jsonPath("$[1].id").isString())
                 .andExpect(jsonPath("$[1].name").value("Spring2"))
                 .andExpect(jsonPath("$[1].employees", hasSize(0)));
@@ -143,11 +130,9 @@ public class CompanyControllerTest {
                 .andExpect(jsonPath("$.id").value("1"))
                 .andExpect(jsonPath("$.name").value("OOCL"))
                 .andExpect(jsonPath("$.employees", hasSize(7)))
-                .andExpect(jsonPath("$.employees[0].id").isString())
                 .andExpect(jsonPath("$.employees[0].age").value("22"))
                 .andExpect(jsonPath("$.employees[0].name").value("Marcus"))
-                .andExpect(jsonPath("$.employees[0].gender").value("Male"))
-                .andExpect(jsonPath("$.employees[0].salary").value("298912220"));
+                .andExpect(jsonPath("$.employees[0].gender").value("Male"));
     }
 
     @Test
