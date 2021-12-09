@@ -12,11 +12,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -47,9 +46,7 @@ public class CompanyControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id").isString())
-                .andExpect(jsonPath("$[0].name").value("Spring"))
-                .andExpect(jsonPath("$[0].employees[0].name").value("Marcus"))
-                .andExpect(jsonPath("$[0].employees[0].gender").value("Male"));
+                .andExpect(jsonPath("$[0].name").value("Spring"));
     }
 
     @Test
@@ -105,12 +102,8 @@ public class CompanyControllerTest {
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id").isString())
                 .andExpect(jsonPath("$[0].name").value("Spring"))
-                .andExpect(jsonPath("$[0].employees", hasSize(7)))
-                .andExpect(jsonPath("$[0].employees[0].name").value("Marcus"))
-                .andExpect(jsonPath("$[0].employees[0].gender").value("Male"))
                 .andExpect(jsonPath("$[1].id").isString())
-                .andExpect(jsonPath("$[1].name").value("Spring2"))
-                .andExpect(jsonPath("$[1].employees", hasSize(0)));
+                .andExpect(jsonPath("$[1].name").value("Spring2"));
     }
 
     @Test
@@ -128,11 +121,7 @@ public class CompanyControllerTest {
                         .content(company))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.name").value("OOCL"))
-                .andExpect(jsonPath("$.employees", hasSize(7)))
-                .andExpect(jsonPath("$.employees[0].age").value("22"))
-                .andExpect(jsonPath("$.employees[0].name").value("Marcus"))
-                .andExpect(jsonPath("$.employees[0].gender").value("Male"));
+                .andExpect(jsonPath("$.name").value("OOCL"));
     }
 
     @Test

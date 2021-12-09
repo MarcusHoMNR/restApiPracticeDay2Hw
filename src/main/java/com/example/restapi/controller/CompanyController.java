@@ -28,8 +28,8 @@ public class CompanyController {
     }
 
     @GetMapping
-    public List<CompanyResponse> getAllCompanies() {
-        return companyService.findAll().stream().map(company -> companyMapper.toResponse(company, companyService.findEmployeeById(company.getId()))).collect(Collectors.toList());
+    public List<Company> getAllCompanies() {
+        return companyService.findAll();
     }
 
     @GetMapping("/{id}")
@@ -45,23 +45,19 @@ public class CompanyController {
     }
 
     @GetMapping(params = {"page", "pageSize"})
-    public List<CompanyResponse> getAllCompaniesByPage(@RequestParam Integer page, Integer pageSize) {
-        return companyService.findByPage(page, pageSize).stream().map(company -> companyMapper.toResponse(company, companyService.findEmployeeById(company.getId()))).collect(Collectors.toList());
+    public List<Company> getAllCompaniesByPage(@RequestParam Integer page, Integer pageSize) {
+        return companyService.findByPage(page, pageSize);
     }
 
     @ResponseStatus(code = HttpStatus.CREATED)
     @PostMapping
-    public CompanyResponse createCompany(@RequestBody Company newCompany) {
-        Company company = companyService.create(newCompany);
-        List<Employee> employees = companyService.findEmployeeById(company.getId());
-        return companyMapper.toResponse(company, employees);
+    public Company createCompany(@RequestBody Company newCompany) {
+        return companyService.create(newCompany);
     }
 
     @PutMapping("/{id}")
-    public CompanyResponse editCompany(@PathVariable String id, @RequestBody Company updatedCompany) {
-        Company company = companyService.edit(id, updatedCompany);
-        List<Employee> employees = companyService.findEmployeeById(id);
-        return companyMapper.toResponse(company, employees);
+    public Company editCompany(@PathVariable String id, @RequestBody Company updatedCompany) {
+        return companyService.edit(id, updatedCompany);
     }
 
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
