@@ -16,6 +16,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -91,26 +92,29 @@ public class EmployeeServiceTest {
         assertEquals(employees, actualEmployees);
     }
 
-
     @Test
     void should_return_updated_employee_when_edit_employee_given_updated_employee() {
         //given
         Employee employee = new Employee(1, "Marcus", 19, "Male", 1920213, 1);
-        Employee updatedEmployee = new Employee(1, "Marcus", 25, "Male", 9999999, 1);
-        given(mockEmployeeRepository.findById(any()))
-                .willReturn(employee);
-        employee.setAge(updatedEmployee.getAge());
-        employee.setSalary(updatedEmployee.getSalary());
-        given(mockEmployeeRepository.save(any(), any(Employee.class)))
+        Employee updatedEmployee = new Employee(1, "Marcus", 25, "Male", 9999999, 2);
+
+        given(mockEmployeeRepository.findById(1))
                 .willReturn(employee);
 
+        employee.setAge(updatedEmployee.getAge());
+        employee.setSalary(updatedEmployee.getSalary());
+        employee.setCompanyId(updatedEmployee.getCompanyId());
+
+        given(mockEmployeeRepository.save(eq(1), any(Employee.class)))
+                .willReturn(updatedEmployee);
+
         //when
-        Employee actual = employeeService.edit(employee.getId(), updatedEmployee);
+        Employee actual = employeeService.edit(1, employee);
 
         //then
         assertAll(
                 () -> verify(mockEmployeeRepository).save(employee.getId(), employee),
-                () -> assertEquals(employee, actual)
+                () -> assertEquals(updatedEmployee, actual)
         );
 
     }
@@ -135,8 +139,6 @@ public class EmployeeServiceTest {
     @Test
     void should_return_nothing_when_delete_given_id_employee() {
         //given
-        Employee employee = new Employee(1, "Marcus", 25, "Male", 9999999, 1);
-
         //when
         employeeService.delete(1);
 

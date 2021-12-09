@@ -13,8 +13,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -84,7 +85,7 @@ public class CompanyServiceTest {
     void should_return_employees_when_findEmployeeById_given_employees_and_companies_and_id() {
         //given
         List<Company> companies = new ArrayList<>();
-        List<Employee> employees =getEmployees();
+        List<Employee> employees = getEmployees();
         companies.add(new Company(1, "Spring"));
         companies.add(new Company(2, "Spring2"));
         given(mockCompanyRepository.findEmployeeById(1))
@@ -130,16 +131,23 @@ public class CompanyServiceTest {
     @Test
     void should_return_updated_company_when_edit_given_company_and_id() {
         //given
+        Company existingCompany = new Company(1, "MMM");
         Company updatedCompany = new Company(1, "OOCL");
-        given(mockCompanyRepository.save(1, updatedCompany))
-                .willReturn(updatedCompany);
+
         given(mockCompanyRepository.findById(1))
+                .willReturn(existingCompany);
+        existingCompany.setName(updatedCompany.getName());
+
+        given(mockCompanyRepository.save(eq(1), any(Company.class)))
                 .willReturn(updatedCompany);
 
         //when
-        Company actual = companyService.edit(1, updatedCompany);
+        Company actual = companyService.edit(1, existingCompany);
         //then
-        assertEquals(updatedCompany, actual);
+        assertAll(
+                () -> verify(mockCompanyRepository).save(1, existingCompany),
+                () -> assertEquals(updatedCompany, actual)
+        );
     }
 
     @Test

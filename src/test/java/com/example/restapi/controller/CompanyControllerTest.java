@@ -1,9 +1,7 @@
 package com.example.restapi.controller;
 
 import com.example.restapi.entity.Company;
-import com.example.restapi.entity.Employee;
 import com.example.restapi.repository.CompanyRepository;
-import com.example.restapi.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -91,7 +86,7 @@ public class CompanyControllerTest {
         companyRepository.findEmployeeById(1);
         //when
         //then
-        mockMvc.perform(MockMvcRequestBuilders.get("/companies/{id}/employees" , company1.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/companies/{id}/employees", company1.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$", hasSize(7)))
                 .andExpect(jsonPath("$[0].id").isNumber())
@@ -115,7 +110,7 @@ public class CompanyControllerTest {
         String page = "1";
         String pageSize = "2";
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/companies?page="+page+"&pageSize="+pageSize))
+        mockMvc.perform(MockMvcRequestBuilders.get("/companies?page=" + page + "&pageSize=" + pageSize))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id").isNumber())

@@ -50,8 +50,8 @@ public class CompanyRepository {
     public Company create(Company newCompany) {
         Integer nextId = this.companies.stream().mapToInt(Company::getId).max().orElse(0) + 1;
         newCompany.setId(nextId);
+        this.companies.add(newCompany); // set employee after add to list for responding the api call only, do not want to store employee in this repository
         newCompany.setEmployees(employeeRepository.findByCompanyId(newCompany.getId()));
-        this.companies.add(newCompany);
         return newCompany;
     }
 
@@ -59,7 +59,8 @@ public class CompanyRepository {
     public Company save(Integer id, Company updatedCompany) {
         Company company = findById(id);
         companies.remove(company);
-        companies.add(updatedCompany);
+        companies.add(updatedCompany);// set employee after add to list for responding the api call only, do not want to store employee in this repository
+        updatedCompany.setEmployees(employeeRepository.findByCompanyId(id));
         return updatedCompany;
     }
 

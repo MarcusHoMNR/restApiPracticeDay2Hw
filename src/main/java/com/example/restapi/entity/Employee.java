@@ -62,4 +62,7 @@ public class Employee {
         this.companyId = companyId;
     }
 
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
+    }
 }

@@ -26,6 +26,10 @@ public class EmployeeService {
         if (updatedEmployee.getSalary() != null) {
             employee.setSalary(updatedEmployee.getSalary());
         }
+
+        if (updatedEmployee.getCompanyId() != null) {
+            employee.setCompanyId(updatedEmployee.getCompanyId());
+        }
         return employeeRepository.save(id, employee);
     }
 
@@ -45,7 +49,7 @@ public class EmployeeService {
         return employeeRepository.create(newEmployee);
     }
 
-    public void delete(int id) {
+    public void delete(Integer id) {
         employeeRepository.delete(id);
     }
 }
