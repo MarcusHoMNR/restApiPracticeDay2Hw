@@ -1,8 +1,8 @@
 package com.example.restapi.service;
 
 import com.example.restapi.entity.Employee;
+import com.example.restapi.exception.NoEmployeeFoundException;
 import com.example.restapi.repository.EmployeeRepository;
-import com.example.restapi.service.EmployeeService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -50,6 +50,17 @@ public class EmployeeServiceTest {
         Employee actualEmployee = employeeService.findById(1);
         //then
         assertEquals(employee, actualEmployee);
+    }
+
+    @Test
+    void should_throw_when_find_all_given_employee_not_exist() {
+        //given
+        given(mockEmployeeRepository.findById(9))
+                .willThrow(NoEmployeeFoundException.class);
+
+        //when
+        //then
+        assertThrows(NoEmployeeFoundException.class, () -> employeeService.findById(9));
     }
 
     @Test
@@ -97,8 +108,11 @@ public class EmployeeServiceTest {
         Employee actual = employeeService.edit(employee.getId(), updatedEmployee);
 
         //then
-        verify(mockEmployeeRepository).save(employee.getId(), employee);
-        assertEquals(employee, actual);
+        assertAll(
+                () -> verify(mockEmployeeRepository).save(employee.getId(), employee),
+                () -> assertEquals(employee, actual)
+        );
+
     }
 
     @Test
@@ -112,8 +126,10 @@ public class EmployeeServiceTest {
         Employee actual = employeeService.create(newEmployee);
 
         //then
-        verify(mockEmployeeRepository).create(newEmployee);
-        assertEquals(newEmployee, actual);
+        assertAll(
+                () -> verify(mockEmployeeRepository).create(newEmployee),
+                () -> assertEquals(newEmployee, actual)
+        );
     }
 
     @Test

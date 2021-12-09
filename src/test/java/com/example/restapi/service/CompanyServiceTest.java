@@ -2,8 +2,8 @@ package com.example.restapi.service;
 
 import com.example.restapi.entity.Company;
 import com.example.restapi.entity.Employee;
+import com.example.restapi.exception.NoCompanyFoundException;
 import com.example.restapi.repository.CompanyRepository;
-import com.example.restapi.repository.EmployeeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -66,6 +67,17 @@ public class CompanyServiceTest {
         Company actual = companyService.findById(1);
         //then
         assertEquals(companies.get(0), actual);
+    }
+
+    @Test
+    void should_throw_when_find_all_given_company_not_exist() {
+        //given
+        given(mockCompanyRepository.findById(9))
+                .willThrow(NoCompanyFoundException.class);
+
+        //when
+        //then
+        assertThrows(NoCompanyFoundException.class, () -> companyService.findById(9));
     }
 
     @Test
