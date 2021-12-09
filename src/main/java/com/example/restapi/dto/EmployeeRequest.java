@@ -1,24 +1,13 @@
-package com.example.restapi.entity;
+package com.example.restapi.dto;
 
-public class Employee {
-
-    private String id;
+public class EmployeeRequest {
     private String name;
     private Integer age;
     private String gender;
     private Integer salary;
     private String companyId;
 
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public EmployeeRequest() {
     }
 
     public String getName() {
@@ -33,7 +22,7 @@ public class Employee {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 
@@ -49,21 +38,12 @@ public class Employee {
         return salary;
     }
 
-    public void setSalary(int salary) {
+    public void setSalary(Integer salary) {
         this.salary = salary;
     }
 
-    public Employee(String id, String name, Integer age, String gender, Integer salary, String companyId) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-        this.salary = salary;
-        this.companyId = companyId;
-    }
-
-    public Employee() {
-
+    public String getCompanyId() {
+        return companyId;
     }
 
     public void setCompanyId(String companyId) {

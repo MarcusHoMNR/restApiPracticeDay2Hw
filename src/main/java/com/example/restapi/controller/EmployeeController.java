@@ -1,6 +1,8 @@
 package com.example.restapi.controller;
 
+import com.example.restapi.dto.EmployeeRequest;
 import com.example.restapi.entity.Employee;
+import com.example.restapi.mapper.EmployeeMapper;
 import com.example.restapi.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,12 @@ import java.util.List;
 public class EmployeeController {
 
     private EmployeeService employeeService;
+    private EmployeeMapper employeeMapper;
+
+    public EmployeeController(EmployeeMapper employeeMapper) {
+        this.employeeMapper = employeeMapper;
+    }
+
 
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
@@ -40,12 +48,14 @@ public class EmployeeController {
 
     @ResponseStatus(code = HttpStatus.CREATED)
     @PostMapping
-    public Employee createEmployee(@RequestBody Employee newEmployee) {
+    public Employee createEmployee(@RequestBody EmployeeRequest newEmployeeRequest) {
+        Employee newEmployee = employeeMapper.toEntity(newEmployeeRequest);
         return employeeService.create(newEmployee);
     }
 
     @PutMapping("/{id}")
-    public Employee editEmployee(@PathVariable String id, @RequestBody Employee updatedEmployee) {
+    public Employee editEmployee(@PathVariable String id, @RequestBody EmployeeRequest updatedEmployeeRequest) {
+        Employee updatedEmployee = employeeMapper.toEntity(updatedEmployeeRequest);
         return employeeService.edit(id, updatedEmployee);
     }
 
