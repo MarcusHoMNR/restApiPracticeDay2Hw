@@ -25,16 +25,11 @@ public class CompanyRepository {
 
 
     public List<Company> findAll() {
-        this.companies.forEach(company -> {
-            company.setEmployees(employeeRepository.findByCompanyId(company.getId()));
-        });
         return this.companies;
     }
 
     public Company findById(String id) {
-        Company company = this.companies.stream().filter(company1 -> company1.getId().equals(id)).findFirst().orElseThrow(NoCompanyFoundException::new);
-        company.setEmployees(employeeRepository.findByCompanyId(company.getId()));
-        return company;
+        return this.companies.stream().filter(company1 -> company1.getId().equals(id)).findFirst().orElseThrow(NoCompanyFoundException::new);
     }
 
     public List<Employee> findEmployeeById(String id) {
@@ -42,16 +37,14 @@ public class CompanyRepository {
     }
 
     public List<Company> findByPage(Integer page, Integer pageSize) {
-        List<Company> companies = this.companies.stream().skip((long) (page - 1) * pageSize).limit(pageSize).collect(Collectors.toList());
-        companies.forEach(company -> {company.setEmployees(employeeRepository.findByCompanyId(company.getId()));});
-        return companies;
+
+        return this.companies.stream().skip((long) (page - 1) * pageSize).limit(pageSize).collect(Collectors.toList());
     }
 
     public Company create(Company newCompany) {
         String nextId = String.valueOf(this.companies.stream().mapToInt(company -> Integer.parseInt(company.getId())).max().orElse(0) + 1);
         newCompany.setId(nextId);
-        this.companies.add(newCompany); // set employee after add to list for responding the api call only, do not want to store employee in this repository
-        newCompany.setEmployees(employeeRepository.findByCompanyId(newCompany.getId()));
+        this.companies.add(newCompany);
         return newCompany;
     }
 
@@ -59,8 +52,7 @@ public class CompanyRepository {
     public Company save(String id, Company updatedCompany) {
         Company company = findById(id);
         companies.remove(company);
-        companies.add(updatedCompany);// set employee after add to list for responding the api call only, do not want to store employee in this repository
-        updatedCompany.setEmployees(employeeRepository.findByCompanyId(id));
+        companies.add(updatedCompany);
         return updatedCompany;
     }
 

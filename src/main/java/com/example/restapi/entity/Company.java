@@ -1,12 +1,8 @@
 package com.example.restapi.entity;
 
-
-import java.util.List;
-
 public class Company {
     private String id;
     private String name;
-    private List<Employee> employees;
 
     public String getId() {
         return id;
@@ -24,16 +20,12 @@ public class Company {
         this.name = name;
     }
 
-    public List<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(List<Employee>  employee) {
-        this.employees = employee;
-    }
-
     public Company(String id, String name) {
         this.id = id;
         this.name = name;
     }
+
+    public Company() {
+    }
 }
+
