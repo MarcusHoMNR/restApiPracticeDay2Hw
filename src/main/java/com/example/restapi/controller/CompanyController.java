@@ -50,9 +50,9 @@ public class CompanyController {
         return companyService.edit(id, updatedCompany);
     }
 
-//    @ResponseStatus(code = HttpStatus.NO_CONTENT)
-//    @DeleteMapping("/{id}")
-//    public void deleteCompany(@PathVariable Integer id) {
-//        companyRepository.delete(id);
-//    }
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void deleteCompany(@PathVariable Integer id) {
+        companyService.delete(id);
+    }
 }
