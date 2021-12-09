@@ -1,20 +1,18 @@
 package com.example.restapi.entity;
 
 
-import com.example.restapi.entity.Employee;
-
 import java.util.List;
 
 public class Company {
-    private Integer id;
+    private String id;
     private String name;
     private List<Employee> employees;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -34,7 +32,7 @@ public class Company {
         this.employees = employee;
     }
 
-    public Company(Integer id, String name) {
+    public Company(String id, String name) {
         this.id = id;
         this.name = name;
     }

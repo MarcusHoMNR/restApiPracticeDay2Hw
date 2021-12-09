@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Repository
@@ -15,13 +14,13 @@ public class EmployeeRepository {
 
 
     public EmployeeRepository() {
-        this.employees.add(new Employee(1, "Marcus", 22, "Male", 298912220, 1));
-        this.employees.add(new Employee(2, "Marcus2", 22, "Male", 298912220, 1));
-        this.employees.add(new Employee(3, "Marcus3", 22, "Male", 298912220, 1));
-        this.employees.add(new Employee(4, "Marcus4", 22, "Male", 298912220, 1));
-        this.employees.add(new Employee(5, "Marcus5", 22, "Male", 298912220, 1));
-        this.employees.add(new Employee(6, "Marcus6", 22, "Male", 298912220, 1));
-        this.employees.add(new Employee(7, "Marcus7", 22, "Male", 298912220, 1));
+        this.employees.add(new Employee("1", "Marcus", 22, "Male", 298912220, "1"));
+        this.employees.add(new Employee("2", "Marcus2", 22, "Male", 298912220, "1"));
+        this.employees.add(new Employee("3", "Marcus3", 22, "Male", 298912220, "1"));
+        this.employees.add(new Employee("4", "Marcus4", 22, "Male", 298912220, "1"));
+        this.employees.add(new Employee("5", "Marcus5", 22, "Male", 298912220, "1"));
+        this.employees.add(new Employee("6", "Marcus6", 22, "Male", 298912220, "1"));
+        this.employees.add(new Employee("7", "Marcus7", 22, "Male", 298912220, "1"));
     }
 
 
@@ -30,7 +29,7 @@ public class EmployeeRepository {
     }
 
 
-    public Employee findById(Integer id) {
+    public Employee findById(String id) {
         return employees.stream().filter(employee -> employee.getId().equals(id)).findFirst().orElseThrow(NoEmployeeFoundException::new);
     }
 
@@ -43,20 +42,20 @@ public class EmployeeRepository {
     }
 
     public Employee create(Employee newEmployee) {
-        Integer nextId = employees.stream().mapToInt(Employee::getId).max().orElse(0) + 1;
+        String nextId = String.valueOf(employees.stream().mapToInt(employee -> Integer.parseInt(employee.getId())).max().orElse(0) + 1);
         newEmployee.setId(nextId);
         this.employees.add(newEmployee);
         return newEmployee;
     }
 
-    public Employee save(Integer id, Employee updatedEmployee) {
+    public Employee save(String id, Employee updatedEmployee) {
         Employee employee = findById(id);
         employees.remove(employee);
         employees.add(updatedEmployee);
         return updatedEmployee;
     }
 
-    public void delete(Integer id) {
+    public void delete(String id) {
         Employee employee = findById(id);
         employees.remove(employee);
     }
@@ -65,7 +64,7 @@ public class EmployeeRepository {
         employees.clear();
     }
 
-    public List<Employee> findByCompanyId(Integer companyId) {
+    public List<Employee> findByCompanyId(String companyId) {
         return employees.stream().filter(employee -> employee.getCompanyId().equals(companyId)).collect(Collectors.toList());
     }
 }

@@ -2,7 +2,6 @@ package com.example.restapi.controller;
 
 import com.example.restapi.entity.Company;
 import com.example.restapi.entity.Employee;
-import com.example.restapi.repository.CompanyRepository;
 import com.example.restapi.service.CompanyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +24,12 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public Company getCompanyById(@PathVariable Integer id) {
+    public Company getCompanyById(@PathVariable String id) {
         return companyService.findById(id);
     }
 
     @GetMapping("/{id}/employees")
-    public List<Employee> getAllEmployeesByCompanyId(@PathVariable Integer id) {
+    public List<Employee> getAllEmployeesByCompanyId(@PathVariable String id) {
         return companyService.findEmployeeById(id);
     }
 
@@ -46,13 +45,13 @@ public class CompanyController {
     }
 
     @PutMapping("/{id}")
-    public Company editCompany(@PathVariable Integer id, @RequestBody Company updatedCompany) {
+    public Company editCompany(@PathVariable String id, @RequestBody Company updatedCompany) {
         return companyService.edit(id, updatedCompany);
     }
 
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void deleteCompany(@PathVariable Integer id) {
+    public void deleteCompany(@PathVariable String id) {
         companyService.delete(id);
     }
 }
