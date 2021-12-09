@@ -7,23 +7,21 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 public class EmployeeServiceTest {
     @Mock
-    EmployeeRepository mockEmployeeRepository;
+    EmployeeRepository EmployeeRepository;
 
     @InjectMocks
     EmployeeService employeeService;
@@ -32,7 +30,7 @@ public class EmployeeServiceTest {
     void should_return_all_employees_when_find_all_given_employees() {
         //given
         List<Employee> employees = new ArrayList<>(Collections.singletonList(new Employee("1", "Marcus", 19, "Male", 1920213, "1")));
-        given(mockEmployeeRepository.findAll())
+        given(EmployeeRepository.findAll())
                 .willReturn(employees);
         //when
         List<Employee> actual = employeeService.findAll();
@@ -45,8 +43,8 @@ public class EmployeeServiceTest {
         //given
         Employee employee = new Employee("1", "Marcus", 19, "Male", 1920213, "1");
 
-        given(mockEmployeeRepository.findById("1"))
-                .willReturn(employee);
+        given(EmployeeRepository.findById("1"))
+                .willReturn(Optional.of(employee));
         //when
         Employee actualEmployee = employeeService.findById("1");
         //then
@@ -56,7 +54,7 @@ public class EmployeeServiceTest {
     @Test
     void should_throw_when_find_all_given_employee_not_exist() {
         //given
-        given(mockEmployeeRepository.findById("9"))
+        given(EmployeeRepository.findById("9"))
                 .willThrow(NoEmployeeFoundException.class);
 
         //when
@@ -69,7 +67,7 @@ public class EmployeeServiceTest {
         //given
         List<Employee> employees = new ArrayList<>(Collections.singletonList(new Employee("1", "Marcus", 19, "Male", 192021, "13")));
 
-        given(mockEmployeeRepository.findByGender("Male"))
+        given(EmployeeRepository.findAllByGender("Male"))
                 .willReturn(employees);
         //when
         List<Employee> actualEmployees = employeeService.findByGender("Male");
@@ -84,8 +82,8 @@ public class EmployeeServiceTest {
 
         Integer page = 1;
         Integer pageSize = 2;
-        given(mockEmployeeRepository.findByPage(page, pageSize))
-                .willReturn(employees);
+        given(EmployeeRepository.findAll(PageRequest.of(1, 2)))
+                .willReturn(new PageImpl<>(employees));
         //when
         List<Employee> actualEmployees = employeeService.findByPage(page, pageSize);
         //then
@@ -98,14 +96,14 @@ public class EmployeeServiceTest {
         Employee employee = new Employee("1", "Marcus", 19, "Male", 1920213, "1");
         Employee updatedEmployee = new Employee("1", "Marcus", 25, "Male", 9999999, "2");
 
-        given(mockEmployeeRepository.findById("1"))
-                .willReturn(employee);
+        given(EmployeeRepository.findById("1"))
+                .willReturn(Optional.of(employee));
 
         employee.setAge(updatedEmployee.getAge());
         employee.setSalary(updatedEmployee.getSalary());
         employee.setCompanyId(updatedEmployee.getCompanyId());
 
-        given(mockEmployeeRepository.save(eq("1"), any(Employee.class)))
+        given(EmployeeRepository.save(any(Employee.class)))
                 .willReturn(updatedEmployee);
 
         //when
@@ -113,7 +111,7 @@ public class EmployeeServiceTest {
 
         //then
         assertAll(
-                () -> verify(mockEmployeeRepository).save(employee.getId(), employee),
+                () -> verify(EmployeeRepository).save(employee),
                 () -> assertEquals(updatedEmployee, actual)
         );
 
@@ -123,7 +121,7 @@ public class EmployeeServiceTest {
     void should_return_created_employee_when_add_employee_given_new_employee() {
         //given
         Employee newEmployee = new Employee("1", "Marcus", 25, "Male", 9999999, "1");
-        given(mockEmployeeRepository.create(newEmployee))
+        given(EmployeeRepository.insert(newEmployee))
                 .willReturn(newEmployee);
 
         //when
@@ -131,7 +129,7 @@ public class EmployeeServiceTest {
 
         //then
         assertAll(
-                () -> verify(mockEmployeeRepository).create(newEmployee),
+                () -> verify(EmployeeRepository).insert(newEmployee),
                 () -> assertEquals(newEmployee, actual)
         );
     }
@@ -143,6 +141,6 @@ public class EmployeeServiceTest {
         employeeService.delete("1");
 
         //then
-        verify(mockEmployeeRepository).delete("1");
+        verify(EmployeeRepository).deleteById("1");
     }
 }

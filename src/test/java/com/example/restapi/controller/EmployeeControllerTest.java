@@ -28,17 +28,17 @@ public class EmployeeControllerTest {
 
     @BeforeEach
     void cleanRepository() {
-        employeeRepository.clearAll();
+        employeeRepository.deleteAll();
     }
 
 
     @Test
     void should_get_all_employees_when_perform_get_given_employees() throws Exception {
         //given
-        Employee employee = new Employee("1", "Marcus", 19, "Male", 1920213, "1");
-        Employee employee2 = new Employee("1", "Gloria", 22, "Female", 1000000,"1");
-        employeeRepository.create(employee);
-        employeeRepository.create(employee2);
+        Employee employee = new Employee("61b1bb92297d450797ed4259", "Marcus", 19, "Male", 1920213, "1");
+        Employee employee2 = new Employee("61b1bb92297d450797ed4260", "Gloria", 22, "Female", 1000000,"1");
+        employeeRepository.insert(employee);
+        employeeRepository.insert(employee2);
 
         //when
         //then
@@ -53,8 +53,8 @@ public class EmployeeControllerTest {
     @Test
     void should_get_employee_when_perform_getID_given_employee_and_id() throws Exception {
         //given
-        Employee employee = new Employee("1", "Gloria", 22, "female", 1000000, "1");
-        employeeRepository.create(employee);
+        Employee employee = new Employee("61b1bb92297d450797ed4259", "Gloria", 22, "female", 1000000, "1");
+        employeeRepository.insert(employee);
         //when
         //then
         mockMvc.perform(MockMvcRequestBuilders.get("/employees/{id}", employee.getId()))
@@ -67,11 +67,11 @@ public class EmployeeControllerTest {
     @Test
     void should_get_all_employees_when_perform_getByGender_given_employees_and_gender() throws Exception {
         //given
-        Employee employee = new Employee("1", "Marcus", 19, "Male", 1920213, "1");
-        Employee employee2 = new Employee("1", "Gloria", 22, "Female", 1000000, "1");
+        Employee employee = new Employee("61b1bb92297d450797ed4259", "Marcus", 19, "Male", 1920213, "1");
+        Employee employee2 = new Employee("61b1bb92297d450797ed4261", "Gloria", 22, "Female", 1000000, "1");
 
-        employeeRepository.create(employee);
-        employeeRepository.create(employee2);
+        employeeRepository.insert(employee);
+        employeeRepository.insert(employee2);
         //when
         //then
         mockMvc.perform(MockMvcRequestBuilders.get("/employees").param("gender", employee.getGender()))
@@ -85,17 +85,17 @@ public class EmployeeControllerTest {
     @Test
     void should_get_employee_list_when_perform_getByPage_given_employees() throws Exception {
         //given
-        Employee employee1 = new Employee("1", "Marcus", 19, "Male", 1920213, "1");
-        Employee employee2 = new Employee("2", "Gloria", 22, "Female", 1000000, "1");
-        Employee employee3 = new Employee("3", "Linne", 22, "Female", 1000000, "1");
+        Employee employee1 = new Employee("61b1bb92297d450797ed4261", "Marcus", 19, "Male", 1920213, "1");
+        Employee employee2 = new Employee("61b1bb92297d450797ed4262", "Gloria", 22, "Female", 1000000, "1");
+        Employee employee3 = new Employee("61b1bb92297d450797ed4263", "Linne", 22, "Female", 1000000, "1");
 
-        employeeRepository.create(employee1);
-        employeeRepository.create(employee2);
-        employeeRepository.create(employee3);
+        employeeRepository.insert(employee1);
+        employeeRepository.insert(employee2);
+        employeeRepository.insert(employee3);
         //when
 
         //then
-        String pageNum = "1";
+        String pageNum = "0";
         String pageSize = "2";
         mockMvc.perform(MockMvcRequestBuilders.get("/employees?page="+pageNum+"&pageSize="+pageSize))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -134,13 +134,13 @@ public class EmployeeControllerTest {
     @Test
     void should_return_changed_employee_when_perform_put_given_employee_id() throws Exception {
         //given
-        Employee employee1 = new Employee("1", "Marcus", 19, "Male", 1920213, "1");
-        Employee employee2 = new Employee("2", "Gloria", 22, "Female", 1000000, "1");
-        Employee employee3 = new Employee("3", "Linne", 22, "Female", 1000000, "1");
+        Employee employee1 = new Employee("61b1bb92297d450797ed4257", "Marcus", 19, "Male", 1920213, "1");
+        Employee employee2 = new Employee("61b1bb92297d450797ed4258", "Gloria", 22, "Female", 1000000, "1");
+        Employee employee3 = new Employee("61b1bb92297d450797ed4259", "Linne", 22, "Female", 1000000, "1");
 
-        employeeRepository.create(employee1);
-        employeeRepository.create(employee2);
-        employeeRepository.create(employee3);
+        employeeRepository.insert(employee1);
+        employeeRepository.insert(employee2);
+        employeeRepository.insert(employee3);
 
         String employee = "{\n" +
                 "        \"age\": 25,\n" +
@@ -149,7 +149,7 @@ public class EmployeeControllerTest {
 
         //when
         //then
-        mockMvc.perform(put("/employees/{id}", employee1.getId())
+        mockMvc.perform(put("/employees/{id}", "61b1bb92297d450797ed4257")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(employee))
                 .andExpect(status().isOk())
@@ -162,11 +162,11 @@ public class EmployeeControllerTest {
     @Test
     void should_delete_employee_when_perform_delete_given_employee_and_id() throws Exception {
         //given
-        Employee employee = new Employee("1", "Marcus", 19, "Male", 1920213, "1");
-        Employee employee2 = new Employee("2", "Gloria", 22, "Female", 1000000, "1");
+        Employee employee = new Employee("61b1bb92297d450797ed4261", "Marcus", 19, "Male", 1920213, "1");
+        Employee employee2 = new Employee("61b1bb92297d450797ed4262", "Gloria", 22, "Female", 1000000, "1");
 
-        employeeRepository.create(employee);
-        employeeRepository.create(employee2);
+        employeeRepository.insert(employee);
+        employeeRepository.insert(employee2);
         //when
         //then
         mockMvc.perform(MockMvcRequestBuilders.delete("/employees/{id}", employee.getId()))

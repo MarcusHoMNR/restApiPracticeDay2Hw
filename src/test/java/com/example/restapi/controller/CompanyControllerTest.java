@@ -94,7 +94,7 @@ public class CompanyControllerTest {
         companyRepository.create(company2);
         companyRepository.create(company3);
 
-        String page = "1";
+        String page = "0";
         String pageSize = "2";
 
         mockMvc.perform(MockMvcRequestBuilders.get("/companies?page=" + page + "&pageSize=" + pageSize))
