@@ -35,13 +35,13 @@ public class CompanyController {
     @GetMapping("/{id}")
     public CompanyResponse getCompanyById(@PathVariable String id) {
         Company company = companyService.findById(id);
-        List<Employee> employees = companyService.findEmployeeById(id);
+        List<Employee> employees = companyService.findEmployeeByCompanyId(id);
         return companyMapper.toResponse(company, employees);
     }
 
     @GetMapping("/{id}/employees")
     public List<EmployeeResponse> getAllEmployeesByCompanyId(@PathVariable String id) {
-        return companyService.findEmployeeById(id).stream().map(employee -> employeeMapper.toResponse(employee)).collect(Collectors.toList());
+        return companyService.findEmployeeByCompanyId(id).stream().map(employee -> employeeMapper.toResponse(employee)).collect(Collectors.toList());
     }
 
     @GetMapping(params = {"page", "pageSize"})

@@ -2,7 +2,7 @@ package com.example.restapi.controller;
 
 import com.example.restapi.entity.Company;
 import com.example.restapi.entity.Employee;
-import com.example.restapi.repository.CompanyRepositoryNew;
+import com.example.restapi.repository.CompanyRepository;
 import com.example.restapi.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class CompanyControllerTest {
     @Autowired
-    CompanyRepositoryNew companyRepositoryNew;
+    CompanyRepository companyRepository;
     @Autowired
     EmployeeRepository employeeRepository;
 
@@ -32,7 +32,7 @@ public class CompanyControllerTest {
 
     @BeforeEach
     void cleanRepository() {
-        companyRepositoryNew.deleteAll();
+        companyRepository.deleteAll();
         employeeRepository.deleteAll();
     }
 
@@ -42,8 +42,8 @@ public class CompanyControllerTest {
         Company company1 = new Company("61b1c0ca8093f31e20c3c451", "Spring");
         Company company2 = new Company("61b1c0ca8093f31e20c3c452", "Spring2");
 
-        companyRepositoryNew.insert(company1);
-        companyRepositoryNew.insert(company2);
+        companyRepository.insert(company1);
+        companyRepository.insert(company2);
 
         //when
         //then
@@ -51,7 +51,8 @@ public class CompanyControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id").isString())
-                .andExpect(jsonPath("$[0].name").value("Spring"));
+                .andExpect(jsonPath("$[0].name").value("Spring"))
+                .andExpect(jsonPath("$[0].employees").doesNotExist());
     }
 
     @Test
@@ -59,7 +60,7 @@ public class CompanyControllerTest {
         //given
         Company company1 = new Company("61b1c0ca8093f31e20c3c451", "Spring");
 
-        companyRepositoryNew.insert(company1);
+        companyRepository.insert(company1);
 
         Employee employee = new Employee("61b1bb92297d450797ed4261", "Marcus", 19, "Male", 1920213, company1.getId());
         Employee employee2 = new Employee("61b1bb92297d450797ed4262", "Gloria", 22, "Female", 1000000, company1.getId());
@@ -82,7 +83,7 @@ public class CompanyControllerTest {
         //given
         Company company1 = new Company("61b1c0ca8093f31e20c3c451", "Spring");
 
-        companyRepositoryNew.insert(company1);
+        companyRepository.insert(company1);
 
         Employee employee = new Employee("61b1bb92297d450797ed4261", "Marcus", 19, "Male", 1920213, company1.getId());
         Employee employee2 = new Employee("61b1bb92297d450797ed4262", "Gloria", 22, "Female", 1000000, company1.getId());
@@ -106,9 +107,9 @@ public class CompanyControllerTest {
         Company company2 = new Company("61b1c0ca8093f31e20c3c452", "Spring2");
         Company company3 = new Company("61b1c0ca8093f31e20c3c453", "Spring3");
 
-        companyRepositoryNew.insert(company1);
-        companyRepositoryNew.insert(company2);
-        companyRepositoryNew.insert(company3);
+        companyRepository.insert(company1);
+        companyRepository.insert(company2);
+        companyRepository.insert(company3);
 
         String page = "0";
         String pageSize = "2";
@@ -118,8 +119,10 @@ public class CompanyControllerTest {
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id").isString())
                 .andExpect(jsonPath("$[0].name").value("Spring"))
+                .andExpect(jsonPath("$[0].employees").doesNotExist())
                 .andExpect(jsonPath("$[1].id").isString())
-                .andExpect(jsonPath("$[1].name").value("Spring2"));
+                .andExpect(jsonPath("$[1].name").value("Spring2"))
+                .andExpect(jsonPath("$[1].employees").doesNotExist());
     }
 
     @Test
@@ -135,7 +138,8 @@ public class CompanyControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(company))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("OOCL"));
+                .andExpect(jsonPath("$.name").value("OOCL"))
+                .andExpect(jsonPath("$.employees").doesNotExist());
     }
 
     @Test
@@ -145,9 +149,9 @@ public class CompanyControllerTest {
         Company company2 = new Company("61b1c0ca8093f31e20c3c452", "Spring2");
         Company company3 = new Company("61b1c0ca8093f31e20c3c453", "Spring3");
 
-        companyRepositoryNew.insert(company1);
-        companyRepositoryNew.insert(company2);
-        companyRepositoryNew.insert(company3);
+        companyRepository.insert(company1);
+        companyRepository.insert(company2);
+        companyRepository.insert(company3);
 
         String company = "{\n" +
                 "    \"name\": \"OOCL\"\n" +
@@ -159,7 +163,8 @@ public class CompanyControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(company))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("OOCL"));
+                .andExpect(jsonPath("$.name").value("OOCL"))
+                .andExpect(jsonPath("$.employees").doesNotExist());
     }
 
     @Test
@@ -169,9 +174,9 @@ public class CompanyControllerTest {
         Company company2 = new Company("61b1c0ca8093f31e20c3c452", "Spring2");
         Company company3 = new Company("61b1c0ca8093f31e20c3c4513", "Spring3");
 
-        companyRepositoryNew.insert(company1);
-        companyRepositoryNew.insert(company2);
-        companyRepositoryNew.insert(company3);
+        companyRepository.insert(company1);
+        companyRepository.insert(company2);
+        companyRepository.insert(company3);
         //when
         //then
         mockMvc.perform(MockMvcRequestBuilders.delete("/companies/{id}", company1.getId()))
